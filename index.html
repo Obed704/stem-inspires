@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STEM Inspires - Inspiring Future Innovators</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+        :root {
+            --yellow: #FFD700;
+            --blue: #0066CC;
+            --red: #E53935;
+            --purple: #8A2BE2;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            background-color: var(--light);
+        }
+        
+        .hero {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: scale(1.1);
+            transition: all var(--transition);
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+        
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.8), rgba(0,0,0,0.4));
+            z-index: 2;
+        }
+        
+        .hero-content {
+            right: 10%;
+            position: relative;
+            z-index: 3;
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            opacity: 0;
+            color: #0066CC;
+            margin-bottom: 5%;
+            transform: translateY(30px);
+        }
+        
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            max-width: 600px;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background-color: rgb(80, 55, 208);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px);
+            align-self: flex-start;
+            margin-right: 15px;
+        }
+        
+        .btn:hover {
+            background: rgb(80, 55, 200,0.5);
+            border: 1px solid white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .dots-container {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+        
+        .dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.5;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            opacity: 1;
+            transform: scale(1.3);
+            background: var(--red);
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            right: 1%;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(0,0,0,0.3);
+            padding: 15px 8%;
+            backdrop-filter: blur(10px);
+        }
+        
+        .logo {
+            font-size: 140%;
+            font-weight: 700;
+            color: rgb(82, 18, 231);
+            text-decoration: none;
+        }
+
+        .logo span{
+            color: yellow;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-link {
+            color: rgb(251, 248, 248);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-link:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: yellow;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover:after {
+            width: 100%;
+        }
+        
+        /* Sections */
+        section {
+            padding: 100px 8%;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--blue);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(142, 68, 173, 0.2);
+        }
+        
+        .feature-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .feature-content {
+            padding: 25px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .feature-desc {
+            color: #6B7280;
+            margin-bottom: 20px;
+        }
+        
+        .feature-link {
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-link:hover {
+            gap: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background: black;
+            color: white;
+            padding: 60px 8% 30px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-link {
+            margin-bottom: 10px;
+        }
+        
+        .footer-link a {
+            color: #D1D5DB;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-link a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--yellow);
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #D1D5DB;
+        }
+        
+        /* Mobile menu */
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-content{
+              margin-left: 10%;
+            }
+
+            .hero-content .logo{
+              width: 50px;
+              height: 50px;
+            }
+            .nav-links {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background: rgba(0,0,0,0.9);
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 0;
+                transform: translateY(-150%);
+                transition: all 0.4s ease;
+                z-index: 99;
+            }
+            
+            .nav-links.active {
+                transform: translateY(0);
+            }
+            
+            .menu-toggle {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .menu-toggle span {
+                width: 25px;
+                height: 2px;
+                background: white;
+                transition: all 0.3s ease;
+            }
+            
+            .menu-toggle.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+            
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .menu-toggle.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(5px, -5px);
+            }
+            
+            .dots-container {
+                bottom: 30px;
+            }
+        }
+
+            /* Border‑glow on hover */
+    .border-glow-blue {
+      transition: box-shadow .4s;
+    }
+    .border-glow-blue:hover {
+      box-shadow:
+        0 0 0 2px rgba(59,130,246,.4),
+        0 0 20px 6px rgba(59,130,246,.25);
+    }
+    .border-glow-green {
+      transition: box-shadow .4s;
+    }
+    .border-glow-green:hover {
+      box-shadow:
+        0 0 0 2px rgba(34,197,94,.4),
+        0 0 20px 6px rgba(34,197,94,.25);
+    }
+
+    .sponsor-card {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    /* Show sponsor-card on hover if NOT locked */
+    .sponsor-group:hover:not(.locked) .sponsor-card {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    /* Hide image on hover if NOT locked */
+    .sponsor-group:hover:not(.locked) img {
+      opacity: 0;
+    }
+    img.logo{
+      height: 20%;
+      width: 20%;
+      margin-left: 10%;
+  }
+  
+    </style>
+</head>
+<body>
+    <!-- Hero Section with Slideshow -->
+    <section class="hero">
+        <!-- Slideshow Images -->
+        <div class="slide active" style="background-image: url('images/SLIDE/521a6270_53590463437_o.webp')"></div>
+        <div class="slide" style="background-image: url('images/first-lego-league-competition--kigali-16-march-2024_53591565730_o.jpg')"></div>
+        <div class="slide" style="background-image: url('images/SLIDE/emilia-president-img.jpg')"></div>
+        <div class="slide" style="background-image: url('images/crlx-img.jpg')"></div>
+        
+        <div class="slide-overlay"></div>
+        
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="#" class="logo">STEM <span>Inspires</span></a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">Home</a>
+                <a href="ourprojects.html" class="nav-link">our project</a>
+                <a href="#programs" class="nav-link">donate</a>
+                <a href="test.html" class="nav-link">women in STEM</a>
+                <a href="getInvolved.html" class="nav-link">get involved</a>
+                <a href="resources.html" class="nav-link">resources</a>
+                <a href="aboutUs.html" class="nav-link">about</a>
+                <a href="contact.html" class="nav-link">contact</a>
+            </div>
+            <div class="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+        <!-- Hero Content -->
+        <div class="hero-content">
+          <img src="images/SLIDE/logo.png" alt="logo" class="logo">
+            <h1 class="hero-title">stem inspires</h1>
+            <p class="hero-subtitle">Inspiring the Next Generation of Innovators Through Inclusive, Exciting, and Hands-On Robotics Curriculums</p>
+            <div class="hero-buttons">
+                <a href="aboutUs.html" class="btn">Learn About stem inspires</a>
+                <a href="ourprojects.html" class="btn btn-secondary">See Events</a>
+            </div>
+        </div>
+        
+        <!-- Slide Dots -->
+        <div class="dots-container">
+            <div class="dot active" data-slide="0"></div>
+            <div class="dot" data-slide="1"></div>
+            <div class="dot" data-slide="2"></div>
+            <div class="dot" data-slide="3"></div>
+        </div>
+    </section>
+    
+    
+      <!-- === Mission & Vision Section === -->
+<section class="bg-black text-white py-16 px-6 md:px-20">
+  <!-- Section Title -->
+  <h2 class="text-4xl font-extrabold text-center mb-16">Our Mission & Vision</h2>
+
+  <!-- Flex container for Mission and Vision -->
+  <div class="flex flex-col md:flex-row md:space-x-10 space-y-10 md:space-y-0 items-stretch">
+    
+    <!-- === Mission Card === -->
+    <div class="flex-1 min-h-[360px] relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-10 shadow-xl border border-blue-600 hover:shadow-blue-400/50 transition duration-500 ease-in-out hover:scale-[1.02] group flex flex-col justify-between">
+      <!-- Icon -->
+      <div>
+        <div class="mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-white group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 12l10 7V5L2 12zM14 5v14l10-7-10-7z" />
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-4">Our Mission</h3>
+        <p class="text-gray-300">
+          We are bringing FIRST LEGO League (FLL) robotics to children ages 9 to 16 to teach the basics of robot design, programming, and problem solving all through a competitive and engaging hands-on learning experience.
+        </p>
+      </div>
+    </div>
+
+    <!-- === Vision Card === -->
+    <div class="flex-1 min-h-[360px] relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-10 shadow-xl border border-green-500 hover:shadow-green-400/50 transition duration-500 ease-in-out hover:scale-[1.02] group flex flex-col justify-between">
+      <!-- Icon -->
+      <div>
+        <div class="mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-20 h-20 text-green-400 group-hover:scale-110 transition-transform duration-300" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 5c-7 0-11 7-11 7s4 7 11 7 11-7 11-7-4-7-11-7zm0 12c-2.8 0-5-2.2-5-5s2.2-5 5-5c2.7 0 5 2.2 5 5s-2.3 5-5 5zm0-8c-1.6 0-3 1.3-3 3s1.4 3 3 3 3-1.3 3-3-1.4-3-3-3z"/>
+          </svg>
+        </div>
+        <h3 class="text-2xl font-semibold mb-4">Our Vision</h3>
+        <p class="text-gray-300">
+          To create a world where young people dream big, develop confidence in STEM, and use robotics to innovate, solve real-world problems, and shape a better future.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+ <section id="programs" class="py-16 bg-blue-100">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Champions in three recent years of work</h2>
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+      <!-- GSOB -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+        <img src="images/gsob-img.jpg" alt="GSOB" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-blue-700 mb-2">G.S.O.B |2025</h3>
+          <p class="text-gray-600 mb-4">GSOB Indatwa n’Inkesha is the oldest and one of the most prestigious secondary schools in Rwanda, located in Huye District. It is well known for its strong academic performance and national significance</p>
+        </div>
+      </div>
+
+      <!-- Christ Loix -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+        <img src="images/gashora-img.jpg" alt="Christ Loix" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-blue-700 mb-2">Christ Loix |2024</h3>
+          <p class="text-gray-600 mb-4">Collège du Christ-Roi de Nyanza is a Catholic school and government-aided. It is located in Butare Diocese, in Southern Province, Nyanza District, Kristu-Umwami Parish. It was started by the Butare Diocese in 1956</p>
+        </div>
+      </div>
+
+      <!-- Gashora -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+        <img src="images/crlx-img.jpg" alt="Gashora" class="w-full h-48 object-cover">
+        <div class="p-6">
+          <h3 class="text-xl font-semibold text-blue-700 mb-2">maranyundo | 2023</h3>
+          <p class="text-gray-600 mb-4">Maranyundo Girls School is a leading Rwandan boarding school offering science-focused education rooted in respect, responsibility, and leadership. It serves over 400 girls, many from underserved communities, with half on scholarships.....</p>
+        </div>
+      </div>
+    
+      
+      
+      
+      
+    </div>
+  </div>
+</section>
+
+<section id="stats" class="py-16 bg-yellow-300 text-black font-sans">
+  <div class="max-w-5xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-3 text-center gap-10">
+    
+    <div class="opacity-0 translate-y-6 transition duration-700 ease-out stat-item">
+      <h3 class="text-5xl font-extrabold counter text-red-600" data-target="125">0</h3>
+      <p class="mt-2 text-lg font-medium">Teams Started</p>
+    </div>
+
+    <div class="opacity-0 translate-y-6 transition duration-700 ease-out stat-item">
+      <h3 id="Student" class="text-5xl font-extrabold counter text-green-700" data-target="2500">0 </h3>
+      <p class="mt-2 text-lg font-medium">Students Learning</p>
+      
+    </div>
+
+    <div class="opacity-0 translate-y-6 transition duration-700 ease-out stat-item">
+      <h3 class="text-5xl font-extrabold counter text-blue-700" data-target="13">0</h3>
+      <p class="mt-2 text-lg font-medium">Competitions</p>
+    </div>
+
+  </div>
+</section>
+
+  <div class="relative w-full h-screen flex flex-col justify-center items-center overflow-hidden font-[cursive]">
+
+  <div id="slider" class="flex w-full h-full transition-transform duration-700 ease-in-out">
+    <!-- Comment 1 -->
+    <div class="flex-shrink-0 w-full h-full flex flex-col justify-center items-center px-10 py-10 text-center bg-blue-600 text-white">
+      <p class="text-2xl md:text-4xl font-semibold italic leading-relaxed relative max-w-2xl mx-auto before:content-['“'] after:content-['”'] before:absolute before:-left-6 after:absolute after:-right-6">
+        "I had no idea how robots worked when I first joined the robotics team, but now I can put up a program and run it myself or with my team."
+      </p>
+      <h3 class="mt-8 text-xl md:text-2xl font-bold text-yellow-300">Celestine Ineza</h3>
+      <p class="text-sm md:text-base mt-1 opacity-85 text-yellow-100">Student of STEM Inspires</p>
+    </div>
+
+    <!-- Comment 2 -->
+    <div class="flex-shrink-0 w-full h-full flex flex-col justify-center items-center px-10 py-10 text-center bg-blue-700 text-white">
+      <p class="text-2xl md:text-4xl font-semibold italic leading-relaxed relative max-w-2xl mx-auto before:content-['“'] after:content-['”'] before:absolute before:-left-6 after:absolute after:-right-6">
+       "Robotics education is a critical component of STEM education in Rwanda, preparing students for a digital future, fostering innovation and creativity... as Rwanda seeks to develop a knowledge-based economy and address societal challenges, it must prioritize STEM education to build a STEM-ready workforce."
+      </p>
+      <h3 class="mt-8 text-xl md:text-2xl font-bold text-pink-200">Sandra Kayitaba</h3>
+      <p class="text-sm md:text-base mt-1 opacity-85 text-pink-100">Writer for the Digital Transformation Center of Rwanda</p>
+    </div>
+
+    <!-- Comment 3 -->
+    <div class="flex-shrink-0 w-full h-full flex flex-col justify-center items-center px-10 py-10 text-center bg-blue-800 text-white">
+      <p class="text-2xl md:text-4xl font-semibold italic leading-relaxed relative max-w-2xl mx-auto before:content-['“'] after:content-['”'] before:absolute before:-left-6 after:absolute after:-right-6">
+        “The enthusiasm and dedication shown by the participating teams are a testament to the potential of the young people in Africa."
+      </p>
+      <h3 class="mt-8 text-xl md:text-2xl font-bold text-green-200">Olajide Ade Ajayi</h3>
+      <p class="text-sm md:text-base mt-1 opacity-85 text-green-100">Regional Coordinator of FLL, Founder of Coderina</p>
+    </div>
+  </div>
+
+  <!-- Navigation Buttons -->
+  <button id="prevBtn" aria-label="Previous"
+    class="absolute left-5 top-1/2 -translate-y-1/2 text-5xl font-bold text-pink-400 hover:text-pink-600 transition">
+    &#10094;
+  </button>
+  <button id="nextBtn" aria-label="Next"
+    class="absolute right-5 top-1/2 -translate-y-1/2 text-5xl font-bold text-pink-400 hover:text-pink-600 transition">
+    &#10095;
+  </button>
+
+  <!-- Dots -->
+  <div id="dots" class="absolute bottom-10 flex space-x-4">
+    <button class="w-5 h-5 rounded-full bg-white bg-opacity-40 hover:bg-opacity-100 transition" aria-label="Slide 1"></button>
+    <button class="w-5 h-5 rounded-full bg-white bg-opacity-40 hover:bg-opacity-100 transition" aria-label="Slide 2"></button>
+    <button class="w-5 h-5 rounded-full bg-white bg-opacity-40 hover:bg-opacity-100 transition" aria-label="Slide 3"></button>
+  </div>
+
+</div>
+
+<section class="bg-gray-100 py-16 px-4 md:px-20">
+  <div class="max-w-7xl mx-auto text-center mb-16">
+    <h2 class="text-3xl md:text-5xl font-bold text-blue-900">Get Involved</h2>
+    <p class="mt-4 text-lg md:text-xl text-gray-700">You can make a difference by taking it further or supporting a team.</p>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-10 items-center">
+    
+    <!-- Card 1: Take it to your school -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <img src="images/first-lego-league-competition--kigali-16-march-2024_53591565575_o.jpg"
+           alt="Students in school robotics class"
+           class="w-full h-64 object-cover">
+      <div class="p-8 text-center">
+        <h3 class="text-2xl font-bold text-blue-800 mb-4">Take FLL to Your School</h3>
+        <p class="text-gray-600 text-base md:text-lg mb-6">
+          Interested in the FIRST LEGO League program but need help to participate? Contact us and a mentor will get in touch with you
+        </p>
+        <a href="contact.html" class="inline-block bg-blue-700 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-800 transition">
+          Start a Team
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2: Sponsor a Team -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <img src="images/gashora.jpg"
+           alt="Sponsorship collaboration"
+           class="w-full h-64 object-cover">
+      <div class="p-8 text-center">
+        <h3 class="text-2xl font-bold text-blue-800 mb-4">Grow the Vision</h3>
+        <p class="text-gray-600 text-base md:text-lg mb-6">Enable a new generation of aspiring engineers to start building.
+          Support students by sponsoring a robotics team. Your contribution helps with kits, mentorship, and competition access.
+        </p>
+        <a href="/donate.html" class="inline-block bg-green-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-green-700 transition">
+          Become a Sponsor
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+    
+    
+
+    <section class="py-16 px-6 max-w-7xl mx-auto bg-gray-50">
+  <h2 class="text-4xl font-bold text-center mb-12 text-gray-800">🌟 Our Sponsors</h2>
+
+  <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+
+    <!-- Sponsor 1 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//sponsor-creativity-lab.avif"
+        alt="creativity lab"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-blue-500 to-blue-300 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-gray-200 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold"></h3>creativity lab
+        <p class="text-xs opacity-90">Leading Creativity Solutions</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-blue-500 font-semibold rounded-full text-xs hover:bg-blue-100 transition duration-300"
+        >
+          see partner
+        </button>
+      </div>
+    </div>
+
+    <!-- Sponsor 2 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//codelina11.png"
+        alt="codelina"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-yellow-400 to-yellow-200 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-gray-700 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold">codelina</h3>
+        <p class="text-xs opacity-90">codelina technologies</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-yellow-500 font-semibold rounded-full text-xs hover:bg-yellow-100 transition duration-300"
+        >
+          See partener
+        </button>
+      </div>
+    </div>
+
+    <!-- Sponsor 3 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//sponsor-stella.avif"
+        alt="stella"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-pink-400 to-pink-300 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-pink-200 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold">stella</h3>
+        <p class="text-xs opacity-90">stella Innovative AI Systems</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-pink-500 font-semibold rounded-full text-xs hover:bg-pink-100 transition duration-300"
+        >
+          see partner
+        </button>
+      </div>
+    </div>
+
+    <!-- Sponsor 4 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//sponsor-teach-rwanda.avif"
+        alt="teach rwanda"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-blue-400 to-pink-400 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-purple-300 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold">teach rwanda</h3>
+        <p class="text-xs opacity-90"> teach rwanda --</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-purple-500 font-semibold rounded-full text-xs hover:bg-purple-100 transition duration-300"
+        >
+          see partner
+        </button>
+      </div>
+    </div>
+
+    <!-- Sponsor 3 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//sponsor-unesco.avif"
+        alt="stella"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-pink-400 to-pink-300 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-pink-200 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold">unesco</h3>
+        <p class="text-xs opacity-90">powering education systems</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-pink-500 font-semibold rounded-full text-xs hover:bg-pink-100 transition duration-300"
+        >
+          see partner
+        </button>
+      </div>
+    </div>
+
+    <!-- Sponsor 3 -->
+    <div
+      class="sponsor-group relative rounded-xl overflow-hidden shadow-lg cursor-pointer max-w-xs mx-auto"
+    >
+      <img
+        src="images/sponsors//sponsor.avif"
+        alt="stella"
+        class="w-full h-40 object-cover block transition-opacity duration-300"
+      />
+      <div
+        class="sponsor-card absolute inset-0 bg-gradient-to-br from-pink-400 to-pink-300 text-white p-6 flex flex-col justify-center items-center space-y-2 rounded-xl"
+      >
+        <button
+          class="self-end text-white text-3xl font-bold hover:text-pink-200 focus:outline-none"
+          aria-label="Close"
+          type="button"
+          onclick="this.closest('.sponsor-group').classList.toggle('locked')"
+        >
+          &times;
+        </button>
+        <h3 class="text-lg font-semibold">stella</h3>
+        <p class="text-xs opacity-90">stella Innovative AI Systems</p>
+        <button
+          class="mt-2 px-4 py-1 bg-white text-pink-500 font-semibold rounded-full text-xs hover:bg-pink-100 transition duration-300"
+        >
+          see partner
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>STEM Inspires</h3>
+                <p>Inspiring the next generation of innovators through hands-on STEM education.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">s</a>
+                    <a href="#" class="social-link">t</a>
+                    <a href="#" class="social-link">e</a>
+                    <a href="#" class="social-link">m</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <a href="#" class="nav-link">Home</a>
+                <li><a href="ourprojects.html" class="nav-link">our project</a></li>
+                <li></li><a href="#programs" class="nav-link">donate</a></li>
+                <li></li><a href="women-in-stem.html" class="nav-link">women in STEM</a></li>
+                <li></li><a href="getInvolved.html" class="nav-link">get involved</a></li>
+                <li></li><a href="resources.html" class="nav-link">resources</a></li>
+                <li></li><a href="aboutUs.html" class="nav-link">about</a></li>
+                <li></li><a href="contact.html" class="nav-link">contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Programs</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="#">make a team</a></li>
+                    <li class="footer-link"><a href="#">competions</a></li>
+                    <li class="footer-link"><a href="#">guidelines</a></li>
+                    <li class="footer-link"><a href="#">Workshops</a></li>
+                    <li class="footer-link"><a href="#">Mentorship</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <ul class="footer-links">
+                    <li class="footer-link"><a href="mailto:info@steminspires.tech">info@steminspires.tech</a></li>
+                    <li class="footer-link"><a href="#">(555) 123-4567</a></li>
+                    <li class="footer-link"><a href="#">123 STEM Avenue</a></li>
+                    <li class="footer-link"><a href="#">Tech City, TC 10001</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 STEM Inspires. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // === Slideshow ===
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let currentSlide = 0;
+    let slideInterval;
+
+    function initSlideshow() {
+      slideInterval = setInterval(nextSlide, 5000);
+
+      const heroTitle = document.querySelector('.hero-title');
+      const heroSubtitle = document.querySelector('.hero-subtitle');
+      const heroButtons = document.querySelectorAll('.btn');
+
+      setTimeout(() => {
+        heroTitle.style.animation = 'fadeInUp 1s forwards';
+        heroSubtitle.style.animation = 'fadeInUp 1s forwards';
+        heroButtons.forEach(btn => {
+          btn.style.animation = 'fadeInUp 1s forwards';
+        });
+      }, 500);
+    }
+
+    function goToSlide(n) {
+      slides[currentSlide].classList.remove('active');
+      dots[currentSlide].classList.remove('active');
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        clearInterval(slideInterval);
+        goToSlide(index);
+        slideInterval = setInterval(nextSlide, 5000);
+      });
+    });
+
+    // === Navbar Scroll Effect ===
+    const navbar = document.querySelector('.navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // === Mobile Menu Toggle ===
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    menuToggle?.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      navLinks.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        navLinks.classList.remove('active');
+      });
+    });
+
+    // === Smooth Scroll ===
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href'))?.scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // === Animate on Scroll ===
+    const animateOnScroll = (elements, className) => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(className);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      elements.forEach(element => observer.observe(element));
+    };
+
+    const featureCards = document.querySelectorAll('.feature-card');
+    animateOnScroll(featureCards, 'animate-feature');
+
+    // === Stats Section Count Up + Animation ===
+    const counters = document.querySelectorAll('.counter');
+    const statItems = document.querySelectorAll('.stat-item');
+
+    const statsObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const stat = entry.target;
+          const counter = stat.querySelector('.counter');
+          const target = +counter.getAttribute('data-target');
+          const speed = 30;
+
+          let count = 0;
+          const increment = Math.ceil(target / 100);
+
+          const countUp = () => {
+  if (count < target) {
+    count += increment;
+
+    if (counter.getAttribute('data-target') === '2500') {
+      counter.innerText = (count > target ? target : count) + '+';
+    } else {
+      counter.innerText = count > target ? target : count;
+    }
+
+    setTimeout(countUp, speed);
+  } else {
+    // Make absolutely sure plus sign stays for 2500
+    if (counter.getAttribute('data-target') === '2500') {
+      counter.innerText = target + '+';
+    } else {
+      counter.innerText = target;
+    }
+  }
+};
+
+
+          stat.classList.remove('opacity-0', 'translate-y-6');
+          stat.classList.add('opacity-100', 'translate-y-0');
+
+          countUp();
+          observer.unobserve(stat);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    statItems.forEach(stat => statsObserver.observe(stat));
+     
+    // Finally, start the slideshow
+    initSlideshow();
+  });
+
+  function showCard(id) {
+      const sponsor = document.getElementById(id);
+      const img = sponsor.querySelector('img');
+      const card = document.getElementById('card-' + id);
+
+      img.style.display = 'none';
+      card.style.opacity = '1';
+      card.style.pointerEvents = 'auto';
+    }
+
+    function hideCard(id) {
+      const sponsor = document.getElementById(id);
+      const img = sponsor.querySelector('img');
+      const card = document.getElementById('card-' + id);
+
+      card.style.opacity = '0';
+      card.style.pointerEvents = 'none';
+      img.style.display = 'block';
+    }
+
+        const slider = document.getElementById('slider');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dots = Array.from(document.querySelectorAll('#dots button'));
+    const totalSlides = slider.children.length;
+    let currentIndex = 0;
+
+    function updateSlider() {
+      slider.style.transform = `translateX(-${currentIndex * 100}vw)`;
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('bg-opacity-100', i === currentIndex);
+        dot.classList.toggle('bg-opacity-50', i !== currentIndex);
+      });
+    }
+
+    prevBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      updateSlider();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateSlider();
+    });
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        currentIndex = i;
+        updateSlider();
+      });
+    });
+
+    // Auto slide every 5 seconds
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateSlider();
+    }, 5000);
+
+    // Initialize
+    updateSlider();
+</script>
+
+</body>
+</html>
